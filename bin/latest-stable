@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Skip pre-releases (-rc, -alpha, -beta).
+"$(dirname "$0")/list-all" | tr ' ' '\n' | grep -v -- - | tail -1

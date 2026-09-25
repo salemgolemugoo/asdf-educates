@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+git ls-remote --tags --refs https://github.com/educates/educates-training-platform |
+  awk -F/ '{print $3}' | sort -V | xargs echo
