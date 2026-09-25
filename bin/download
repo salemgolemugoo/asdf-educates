@@ -20,8 +20,14 @@ asset="educates-${os}-${arch}"
 base="https://github.com/educates/educates-training-platform/releases/download/${ASDF_INSTALL_VERSION}"
 cd "$ASDF_DOWNLOAD_PATH"
 
-curl -fsSL -o educates "$base/$asset"
-curl -fsSL -o checksums.txt "$base/checksums.txt"
+# Some pre-releases shipped without CLI binaries or checksums.
+for f in "$asset" checksums.txt; do
+  curl -fsSL -o "$f" "$base/$f" || {
+    echo "release $ASDF_INSTALL_VERSION has no $f" >&2
+    exit 1
+  }
+done
+mv "$asset" educates
 
 expected=$(awk -v f="$asset" '$2 == f {print $1}' checksums.txt)
 if command -v sha256sum >/dev/null; then
